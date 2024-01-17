@@ -311,7 +311,23 @@ function isContainNumber(num, digit) {
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
 function getBalanceIndex(arr) {
- 
+  let totalSum = 0;
+  for (let i = 0; i < arr.length; i += 1) {
+    totalSum += arr[i];
+  }
+
+  let leftSum = 0;
+  for (let i = 0; i < arr.length; i += 1) {
+    const rightSum = totalSum - leftSum - arr[i];
+
+    if (leftSum === rightSum) {
+      return i;
+    }
+
+    leftSum += arr[i];
+  }
+
+  return -1;
 }
 
 /**
@@ -335,8 +351,45 @@ function getBalanceIndex(arr) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const matrix = new Array(size);
+  for (let i = 0; i < size; i += 1) {
+    matrix[i] = new Array(size);
+  }
+
+  let num = 1;
+  let startRow = 0;
+  let endRow = size - 1;
+  let startCol = 0;
+  let endCol = size - 1;
+
+  while (startRow <= endRow && startCol <= endCol) {
+    for (let col = startCol; col <= endCol; col += 1) {
+      matrix[startRow][col] = num;
+      num += 1;
+    }
+    startRow += 1;
+
+    for (let row = startRow; row <= endRow; row += 1) {
+      matrix[row][endCol] = num;
+      num += 1;
+    }
+    endCol -= 1;
+
+    for (let col = endCol; col >= startCol; col -= 1) {
+      matrix[endRow][col] = num;
+      num += 1;
+    }
+    endRow -= 1;
+
+    for (let row = endRow; row >= startRow; row -= 1) {
+      matrix[row][startCol] = num;
+      num += 1;
+    }
+    startCol += 1;
+  }
+
+  return matrix;
 }
 
 /**
@@ -372,8 +425,38 @@ function rotateMatrix(/* matrix */) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(arr) {
+  const newArr = arr;
+  function partition(low, high) {
+    const pivot = newArr[high];
+    let i = low - 1;
+
+    for (let j = low; j <= high - 1; j += 1) {
+      if (newArr[j] < pivot) {
+        i += 1;
+        const temp = newArr[i];
+        newArr[i] = newArr[j];
+        newArr[j] = temp;
+      }
+    }
+    const temp = newArr[i + 1];
+    newArr[i + 1] = newArr[high];
+    newArr[high] = temp;
+
+    return i + 1;
+  }
+
+  function quickSort(low, high) {
+    if (low < high) {
+      const pi = partition(low, high);
+
+      quickSort(low, pi - 1);
+      quickSort(pi + 1, high);
+    }
+  }
+
+  quickSort(0, newArr.length - 1);
+  return newArr;
 }
 
 /**
@@ -393,8 +476,19 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  let newStr = '';
+  const { length } = str;
+
+  for (let i = 0; i < length; i += 1) {
+    let newPos = i;
+    for (let iter = 0; iter < iterations; iter += 1) {
+      newPos = newPos % 2 === 0 ? newPos / 2 : (length + newPos - 1) / 2;
+    }
+    newStr += str.charAt(newPos);
+  }
+
+  return newStr;
 }
 
 /**
